@@ -1,0 +1,76 @@
+name: Deploy to GitHub Pages
+
+# This workflow runs ONLY on the gh-pages branch
+# It deploys the HTML report to GitHub Pages
+on:
+  push:
+    branches: [ gh-pages ]
+  workflow_dispatch:
+
+# Sets permissions for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: 🚀 Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+    - name: 📥 Checkout gh-pages branch
+      uses: actions/checkout@v4
+      with:
+        ref: gh-pages
+    
+    - name: 🔍 Verify HTML Report
+      run: |
+        echo "📂 Contents of gh-pages branch:"
+        ls -la
+        echo ""
+        if [ -f "index.html" ]; then
+          echo "✅ index.html found!"
+          echo "📄 File size: $(du -h index.html | cut -f1)"
+        else
+          echo "❌ ERROR: index.html not found!"
+          exit 1
+        fi
+        echo ""
+        echo "🖼️ Image files:"
+        ls -lh *.png 2>/dev/null || echo "No PNG files found"
+    
+    - name: ⚙️ Setup GitHub Pages
+      uses: actions/configure-pages@v4
+    
+    - name: 📦 Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: '.'
+    
+    - name: 🌐 Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+    
+    - name: 🎉 Deployment Success
+      run: |
+        echo "=========================================="
+        echo "✅ Successfully Deployed to GitHub Pages!"
+        echo "=========================================="
+        echo ""
+        echo "🔗 Your report is live at:"
+        echo "${{ steps.deployment.outputs.page_url }}"
+        echo ""
+        echo "🌐 Direct URL:"
+        echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+        echo ""
+        echo "⏱️ It may take 1-2 minutes for changes to appear"
