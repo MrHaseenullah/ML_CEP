@@ -342,7 +342,7 @@ Predicted Energy (Wh)
 - ✅ **Automatic Mode Detection** - GMM discovers patterns without manual labeling
 - ✅ **Singularity-Proof Design** - Ridge regularization guarantees matrix invertibility
 - ✅ **Embedded-Ready** - Closed-form solution (no iterative optimization)
-- ✅ **Better Accuracy** - Outperforms single global model
+- ✅ **Better Accuracy** - Outperforms single global model.
 - ✅ **Comprehensive Evaluation** - Detailed comparison and failure analysis
 
 ### Advanced Features
